@@ -1,0 +1,10 @@
+# LaTeX
+*.out
+*.aux
+*.cb
+*.toc
+*.synctex.gz
+*.log
+
+# Matlab
+
