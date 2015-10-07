@@ -41,3 +41,13 @@ qqplot(valid_delay, predict_delay)
 
 csvwrite('prediction.csv', [valid_id predict_delay]);
 
+%Towards a better model:
+% 1. Use feature transformation: 
+    %a.By looking at each feature compared to the response variable
+    %b.By computing the covariance matrix and study the factors
+% 2. Use feature selection:
+    %Remove unwanted/useless feature after the transformations
+% 3. Build a K-fold Cross Validation algorithm. (K=10 is a good value)
+    %Compare the score of each fold (_mean_ + variance) against the
+    %test data. If good, run model on test data.
+
