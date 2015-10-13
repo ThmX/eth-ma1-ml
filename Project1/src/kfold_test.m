@@ -26,31 +26,46 @@ valid_input = csvread('../data/validate_and_test.csv');
 
 %training_set = train_input;
 %validation = valid_input;
-%[training_set, validation] = kfold(train_input, 2);
 
-training_set = train_input(1:600, :);
-validation = train_input(601:end, :);
+lambda = 35.235823884029720;
+model = 'quadratic';
+RMSEs = [];
+k = 6;
+for i = 1:k
+    [training_set, validation] = kfold(train_input, k, i);
 
-test_set = training_set(:, 2:15);
-test_response = training_set(:,end);
+    test_set = training_set(:, 2:15);
+    test_response = training_set(:,end);
 
-lm = fit_cpu(test_set, test_response);
+    % Fitting
+    [B, FitInfo] = fit_cpu_lasso(test_set, test_response, model);
 
-% Validation
-valid_id = validation(:,1);
-valid_set = validation(:,2:15);
-valid_response = validation(:,16);
+    % Validation
+    valid_set = x2fx(validation(:,2:15), model);
+    valid_response = validation(:,16);
 
-% Prediction
+    % Prediction
+    predict_response = valid_set * B(:,FitInfo.IndexMinDeviance) + FitInfo.Intercept(FitInfo.IndexMinDeviance);
 
-predict_response = predict(lm, valid_set);
-qqplot(valid_response, predict_response)
+    % Root Mean Squared Error
+    rmse = sqrt(mean((valid_response - predict_response).^2));
+    
+    scatter(i, rmse, 'b');
+    hold on;
+    RMSEs = [RMSEs rmse];
+end
 
-% Root Mean Squared Error
-RMSE = sqrt(mean((valid_response - predict_response).^2));
-fprintf('**************************\n');
-fprintf('*** RMSE = %f ***\n', RMSE);
-fprintf('**************************\n');
+hold on;
+RMSE_mean = mean(RMSEs);
+RMSE_sd = std(RMSEs);
+plot(1:k, repmat(RMSE_mean,1,k), 'r');
+plot(1:k, repmat(RMSE_mean+RMSE_sd,1,k), 'g');
+plot(1:k, repmat(RMSE_mean-RMSE_sd,1,k), 'g');
+
+fprintf('***************************\n');
+fprintf('***   mean = %f ***\n', RMSE_mean);
+fprintf('***   sd   = %f ***\n', RMSE_sd);
+fprintf('***************************\n');
 
 %csvwrite('prediction2.csv', [valid_id predict_response]);
 
