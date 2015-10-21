@@ -33,7 +33,7 @@ k = 6;
 for i = 1:k
     [training_set, validation] = kfold(train_input, k, i);
 
-    test_set = training_set(:, 2:15);
+    test_set = x2fx(training_set(:, 2:15), model);
     test_response = training_set(:,end);
 
     % Validation
@@ -41,11 +41,13 @@ for i = 1:k
     valid_response = validation(:,16);
     
     % Fitting
-    [B, FitInfo] = fit_cpu_lasso(test_set, test_response, model);
+    %[B, FitInfo] = fit_cpu_lasso(test_set, test_response);
+    B = fit_cpu_random_forest(test_set, test_response);
 
     % Prediction
-    predict_response = valid_set * B(:,FitInfo.IndexMinDeviance) + FitInfo.Intercept(FitInfo.IndexMinDeviance);
-
+    %predict_response = valid_set * B(:,FitInfo.IndexMinDeviance) + FitInfo.Intercept(FitInfo.IndexMinDeviance);
+    predict_response = B.predict(valid_set);
+    
     % Root Mean Squared Error
     rmse = sqrt(mean((valid_response - predict_response).^2));
     
