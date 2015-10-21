@@ -24,17 +24,11 @@ names = {'Width', 'ROB', 'IQ', 'LSQ', 'RFs', 'RF read', 'RF write', 'Gshare', 'B
 train_input = csvread('../data/train.csv');
 valid_input = csvread('../data/validate_and_test.csv');
 
-valid_id=valid_input(:,1);
-real_valid_set=valid_input(:,2:15);
-
 %training_set = train_input;
 %validation = valid_input;
 
-lambda = 35.235823884029720;
 model = 'quadratic';
 RMSEs = [];
-coeff=[];
-bias=[];
 k = 6;
 for i = 1:k
     [training_set, validation] = kfold(train_input, k, i);
@@ -42,20 +36,15 @@ for i = 1:k
     test_set = training_set(:, 2:15);
     test_response = training_set(:,end);
 
-    % Fitting
-    [B, FitInfo] = fit_cpu_lasso(test_set, test_response, model);
-
     % Validation
     valid_set = x2fx(validation(:,2:15), model);
     valid_response = validation(:,16);
+    
+    % Fitting
+    [B, FitInfo] = fit_cpu_lasso(test_set, test_response, model);
 
     % Prediction
     predict_response = valid_set * B(:,FitInfo.IndexMinDeviance) + FitInfo.Intercept(FitInfo.IndexMinDeviance);
-    
-    %Saves the coefficients
-    
-    coeff=horzcat(coeff,B(:,FitInfo.IndexMinDeviance));
-    bias = horzcat(bias,FitInfo.Intercept(FitInfo.IndexMinDeviance));
 
     % Root Mean Squared Error
     rmse = sqrt(mean((valid_response - predict_response).^2));
@@ -76,18 +65,3 @@ fprintf('***************************\n');
 fprintf('***   mean = %f ***\n', RMSE_mean);
 fprintf('***   sd   = %f ***\n', RMSE_sd);
 fprintf('***************************\n');
-
-predict_response_validation = real_valid_set * coeff(:,1) + coeff(1,2);
-
-csvwrite('prediction2.csv', [valid_id predict_response_validation]);
-
-%Towards a better model:
-% 1. Use feature transformation: 
-    %a.By looking at each feature compared to the response variable
-    %b.By computing the covariance matrix and study the factors
-% 2. Use feature selection:
-    %Remove unwanted/useless feature after the transformations
-% 3. Build a K-fold Cross Validation algorithm. (K=10 is a good value)
-    %Compare the score of each fold (_mean_ + variance) against the
-    %test data. If good, run model on test data.
-

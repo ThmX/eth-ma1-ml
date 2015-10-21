@@ -1,5 +1,4 @@
 clear;
-hold off;
 
 % Column description
 
@@ -24,35 +23,30 @@ names = {'Width', 'ROB', 'IQ', 'LSQ', 'RFs', 'RF read', 'RF write', 'Gshare', 'B
 train_input = csvread('../data/train.csv');
 valid_input = csvread('../data/validate_and_test.csv');
 
-%training_set = train_input;
-%validation = valid_input;
-%[training_set, validation] = kfold(train_input, 2);
+training_set = train_input;
+validation = valid_input;
 
-training_set = train_input(1:600, :);
-validation = train_input(601:end, :);
+%training_set = train_input(1:600, :);
+%validation = train_input(601:end, :);
 
-test_set = training_set(:, 2:15);
+model = 'quadratic';
+test_set = x2fx(training_set(:, 2:15), model);
 test_response = training_set(:,end);
-
-lm = fit_cpu(test_set, test_response);
 
 % Validation
 valid_id = validation(:,1);
-valid_set = validation(:,2:15);
-valid_response = validation(:,16);
+valid_set = x2fx(validation(:,2:15), model);
+valid_response = validation(:,end);
+
+% Fitting
+%[B, FitInfo] = fit_cpu_lasso(test_set, test_response);
+B = fit_cpu_random_forest(test_set, test_response);
 
 % Prediction
+%predict_response = valid_set * B(:,FitInfo.IndexMinDeviance) + FitInfo.Intercept(FitInfo.IndexMinDeviance);
+predict_response = B.predict(valid_set);
 
-predict_response = predict(lm, valid_set);
-qqplot(valid_response, predict_response)
-
-% Root Mean Squared Error
-RMSE = sqrt(mean((valid_response - predict_response).^2));
-fprintf('**************************\n');
-fprintf('*** RMSE = %f ***\n', RMSE);
-fprintf('**************************\n');
-
-%csvwrite('prediction2.csv', [valid_id predict_response]);
+csvwrite('prediction6.csv', [valid_id predict_response]);
 
 %Towards a better model:
 % 1. Use feature transformation: 
