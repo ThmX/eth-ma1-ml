@@ -24,20 +24,22 @@ names = {'Width', 'ROB', 'IQ', 'LSQ', 'RFs', 'RF read', 'RF write', 'Gshare', 'B
 train_input = csvread('../data/train.csv');
 valid_input = csvread('../data/validate_and_test.csv');
 
+selected = 2:15; %[1 4 6 7 14] + 1;
+
 %training_set = train_input;
 %validation = valid_input;
 
-model = 'quadratic';
+model = 'linear';
 RMSEs = [];
 k = 6;
 for i = 1:k
     [training_set, validation] = kfold(train_input, k, i);
 
-    test_set = x2fx(training_set(:, 2:15), model);
+    test_set = x2fx(training_set(:,selected), model);
     test_response = training_set(:,end);
 
     % Validation
-    valid_set = x2fx(validation(:,2:15), model);
+    valid_set = x2fx(validation(:,selected), model);
     valid_response = validation(:,16);
     
     % Fitting
