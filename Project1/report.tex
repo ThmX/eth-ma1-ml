@@ -81,9 +81,8 @@ This was mainly done by
 We always started by using the linear model, and then added some of the quadratic terms for each of the algorithms.
 
 \section{Parameters}
-How did you find the parameters of your model? (What parameters have you searched over, cross validation procedure, $\ldots$)
+We used 10-fold cross validation to search for $\lambda$ in LASSO.
 
-\section{Lessons Learned} What other algorithms, tools or methods did you try out that didn't work well?
-Why do you think they performed worse than what you used for your final submission?
+\section{Lessons Learned} The treebagger class of matlab seems to perform less well compared to the random forest package in R. We have also noticed that the use of random forest seemed to always yield better parameters for our model.
 
 \end{document}
