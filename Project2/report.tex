@@ -1,0 +1,59 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+% Lengths and indenting
+\setlength{\textwidth}{16.5cm}
+\setlength{\marginparwidth}{1.5cm}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0.15cm}
+\setlength{\textheight}{22cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{\oddsidemargin}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{0cm}
+\setlength{\headsep}{0cm}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\title{Machine Learning 2014: Project 1 - Regression Report}
+\author{trubeli@student.ethz.ch\\ tdenoreaz@student.ethz.ch\\ liliu@student.ethz.ch\\}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Experimental Protocol}
+%Suppose that someone wants to reproduce your results. Briefly describe the steps used to obtain the
+%predictions starting from the raw data set downloaded from the project website. Use the following
+%sections to explain your methodology. Feel free to add graphs or screenshots if you think it's
+%necessary. The report should contain a maximum of 2 pages.
+
+We started by using a multi-class svm on the raw data. We first wrote and experiment with the sci-kit learn classifier classes in order to obtain prediction. In a second step, we tried to enhance our score by normalizing the training dataset by:
+
+\begin{enumerate}
+	\item Subtracting the mean of each feature of the dataset
+	\item Divide each feature vector by its standard deviation.  
+\end{enumerate}
+
+This normalization however seemed to fail in our case and lead to worst results. Finally we also tried to smooth the data points using a Gaussian filter. The idea behind this was (...) 
+
+\section{Tools}
+%Which tools and libraries have you used (e.g. Matlab, Python with scikit-learn, Java with Weka,
+%Spss, language x with library y, $\ldots$). If you have source-code (Matlab scripts, Python scripts, Java source folder, \dots),
+%make sure to submit it on the project website together with this report. If you only used
+%command-line or GUI-tools describe what you did.
+
+We did most of the processing using Matlab, in the early stage of the project we used the sci-kit learn package in Python. 
+
+\section{Algorithm}
+%Describe the algorithm you used for regression (e.g. ordinary least squares, ridge regression, $\ldots$)
+
+\section{Parameters}
+We used 20 trees for our Random Forest algorithm.
+
+\section{Lessons Learned} The treebagger class of matlab seems to perform better  compared to the random forest package in scikit learn. We have also noticed that the use of random forest seemed to always yield better parameters for our model.
+
+\end{document}
