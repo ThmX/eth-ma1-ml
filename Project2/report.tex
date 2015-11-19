@@ -18,7 +18,7 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
-\title{Machine Learning 2014: Project 1 - Regression Report}
+\title{Machine Learning 2015: Project 2 - Classification Report}
 \author{trubeli@student.ethz.ch\\ tdenoreaz@student.ethz.ch\\ liliu@student.ethz.ch\\}
 \date{\today}
 
@@ -38,7 +38,7 @@ We started by using a multi-class svm on the raw data. We first wrote and experi
 	\item Divide each feature vector by its standard deviation.  
 \end{enumerate}
 
-This normalization however seemed to fail in our case and lead to worst results. Finally we also tried to smooth the data points using a Gaussian filter. The idea behind this was (...) 
+This normalization however seemed to fail in our case and lead to worst results. Finally we also tried to smooth the data points using a Gaussian filter. The idea behind this was to smooth the data and removing the possible outliers values.
 
 \section{Tools}
 %Which tools and libraries have you used (e.g. Matlab, Python with scikit-learn, Java with Weka,
@@ -50,6 +50,15 @@ We did most of the processing using Matlab, in the early stage of the project we
 
 \section{Algorithm}
 %Describe the algorithm you used for regression (e.g. ordinary least squares, ridge regression, $\ldots$)
+We used two algorithms during our tests:
+\subsection{Support Vector Machine}
+We set the kernel using the \emph{Gaussian radial basis function}.
+However the performance were not as better as what we have using Random Forest.
+
+\subsection{Random Forest}
+The Random Forest Classification Algorithm.
+However, in order to process the features before feeding it to the algorithm.
+We decided to apply a Gaussian Filter in order to smooth the data and hopefully reduce the error.
 
 \section{Parameters}
 We used 20 trees for our Random Forest algorithm.
